@@ -15,7 +15,13 @@ import styled from 'styled-components'
         grid-template-columns: 26rem 1fr;
         grid-template-rows: auto 1fr;
         height: 100vh;
-    
+    `
+    const Containter = styled.div`
+       max-width: 120rem;
+       margin: 0 auto;
+       display:flex;
+       flex-direction: column;
+       gap:3.2rem;
     `
 function AppLayout() {
 
@@ -25,8 +31,11 @@ function AppLayout() {
         <Header />
         <Sidebar />
         <Main>
+          <Containter>
+
 
         <Outlet />
+          </Containter>
         </Main>
     </StyledApplayout>
   )
