@@ -5,9 +5,9 @@ import Header from './Header'
 import styled from 'styled-components'
 
     const Main = styled.main`
-    background-color: lightgreen;
     padding :4rem 4.8rem 6.4rem;
     background-color: var(--color-grey-50);
+    overflow-y: auto;
     `
 
     const StyledApplayout = styled.div`
@@ -22,6 +22,7 @@ import styled from 'styled-components'
        display:flex;
        flex-direction: column;
        gap:3.2rem;
+      
     `
 function AppLayout() {
 
