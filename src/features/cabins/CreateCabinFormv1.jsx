@@ -7,7 +7,7 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEditCabins } from "../../services/apiCabins";
+import { createCabins } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import StyledFormRow from "../../ui/StyledFormRow";
 
@@ -47,25 +47,15 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({cabinToEdit = {}}) {
+function CreateCabinForm1() {
 
-  console.log(cabinToEdit);
-
-  const{id : editId} = cabinToEdit
-
-  const isEditMode = Boolean(editId)
-  
-  const{register , handleSubmit ,getValues , formState, reset} = useForm({
-      defaultValues: editId ? cabinToEdit : {}
-  });
-
-  // const{editId:id , ...cabinToEdit} = cabinToEdit
+  const{register , handleSubmit ,getValues , formState, reset} = useForm();
   const{errors} = formState
 
   const queryClient = useQueryClient()  
 
   const{mutate , isLoading} = useMutation({
-    mutationFn: createEditCabins,
+    mutationFn: createCabins,
     onSuccess:()=>{
       toast.success('Cabin Created Successfully')
       queryClient.invalidateQueries(
@@ -83,6 +73,7 @@ function CreateCabinForm({cabinToEdit = {}}) {
   function onSubmit(data){
     mutate({...data , image:data.image[0]});
     // console.log(data.image[0].name);
+    
   }
   function onError(error){
     console.log(error);  
@@ -130,7 +121,7 @@ function CreateCabinForm({cabinToEdit = {}}) {
           id="image" 
           accept="image/*"
           {...register('image',{
-            required: isEditMode ? false :"this field is required",
+            required:"this field is required",
             
           })}
          />
@@ -147,4 +138,4 @@ function CreateCabinForm({cabinToEdit = {}}) {
   );
 }
 
-export default CreateCabinForm;
+export default CreateCabinForm1;
