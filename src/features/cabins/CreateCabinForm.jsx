@@ -48,9 +48,6 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm({cabinToEdit = {}}) {
-
-  console.log(cabinToEdit);
-
   const{id : editId} = cabinToEdit
 
   const isEditMode = Boolean(editId)
@@ -64,7 +61,7 @@ function CreateCabinForm({cabinToEdit = {}}) {
 
   const queryClient = useQueryClient()  
 
-  const{mutate , isLoading} = useMutation({
+  const{mutate: createCabin , isLoading : isCreating} = useMutation({
     mutationFn: createEditCabins,
     onSuccess:()=>{
       toast.success('Cabin Created Successfully')
@@ -79,10 +76,39 @@ function CreateCabinForm({cabinToEdit = {}}) {
       toast.error(err.message)
     }
   })
+  const{mutate:editcaib , isLoading : isEditing} = useMutation({
+    mutationFn:({newCabin , id})=> createEditCabins(newCabin, id),
+    onSuccess:()=>{
+      toast.success('Cabin Created Successfully')
+      queryClient.invalidateQueries(
+        {
+          queryKey:['cabin']
+        }
+      )
+      reset()
+    },
+    onError:(err)=>{
+      toast.error(err.message)
+    }
+  })
+
+  const isWorking = isCreating || isEditing
 
   function onSubmit(data){
-    mutate({...data , image:data.image[0]});
-    // console.log(data.image[0].name);
+    console.log('is editing model: ', isEditMode);
+    
+    const image = typeof data.image === 'string' ? data.image : data.image[0];
+    if(isEditMode)
+    {
+      editcaib({newCabin: {...data , image} , id : editId});
+      // console.log(data);
+    }
+    else
+    {
+      createCabin({...data , image:data.image[0]});
+    }  
+ 
+    
   }
   function onError(error){
     console.log(error);  
@@ -131,7 +157,6 @@ function CreateCabinForm({cabinToEdit = {}}) {
           accept="image/*"
           {...register('image',{
             required: isEditMode ? false :"this field is required",
-            
           })}
          />
       </FormRow>
@@ -141,7 +166,7 @@ function CreateCabinForm({cabinToEdit = {}}) {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isLoading}>Submit Cabin</Button>
+        <Button disabled={isWorking}>Submit Cabin</Button>
       </FormRow>
     </Form>
   );

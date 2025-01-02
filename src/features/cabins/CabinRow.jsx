@@ -49,7 +49,7 @@ import CreateCabinForm from "./CreateCabinForm";
 function CabinRow({cabin}) {
 
   const[showEditOption , setShowEditOption] = useState(false)
-  const{image ,id , description , discount  , regularPrice , maxCapacty , name} = cabin
+  const{image ,id , description , discount  , regularPrice , maxCapacity , name} = cabin
 
   const queryClient = useQueryClient();
 
@@ -76,7 +76,7 @@ const{isLoading:isDeleting , mutate} = useMutation({
     <TableRow role="row">
      <Img src={image}/>
      <Cabin>{name}</Cabin>
-     <div>Fits upto {maxCapacty}</div>
+     <div>Fits upto {maxCapacity}</div>
      <Price>{formatCurrency(regularPrice)}</Price>
      <Discount>{formatCurrency(discount)}</Discount>
      <div>
