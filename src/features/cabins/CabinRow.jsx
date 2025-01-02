@@ -41,35 +41,15 @@ const Discount = styled.div`
 `;
 
 import React, { useState } from 'react'
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCabins } from "../../services/apiCabins";
-import toast from "react-hot-toast";
 import CreateCabinForm from "./CreateCabinForm";
+import { useDeleteCabin } from "./useDeleteCabins";
 
 function CabinRow({cabin}) {
 
   const[showEditOption , setShowEditOption] = useState(false)
   const{image ,id , description , discount  , regularPrice , maxCapacity , name} = cabin
 
-  const queryClient = useQueryClient();
-
-  
-const{isLoading:isDeleting , mutate} = useMutation({
-  mutationFn : (id)=>deleteCabins(id),
-  onSuccess:()=>{
-    toast.success('cabin deleted')
-    queryClient.invalidateQueries(
-      {
-        queryKey:['cabin']
-      }
-    )
-  },
-  onError:(err)=>{
-    toast.error(err.message)
-  }
-})
-
-
+  const {isDeleting , deleteCabin} = useDeleteCabin();
 
   return (
     <>
@@ -80,7 +60,7 @@ const{isLoading:isDeleting , mutate} = useMutation({
      <Price>{formatCurrency(regularPrice)}</Price>
      <Discount>{formatCurrency(discount)}</Discount>
      <div>
-     <button onClick={()=>mutate(id)} disabled={isDeleting}>delete</button>
+     <button onClick={()=>deleteCabin(id)} disabled={isDeleting}>delete</button>
      <button onClick={()=>setShowEditOption(s=>!s)}>edit</button>
      </div>
     </TableRow>
