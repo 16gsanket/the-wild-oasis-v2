@@ -1,12 +1,24 @@
 import BookingRow from "./BookingRow";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
+import Empty from "../../ui/Empty";
+import { useQuery } from "@tanstack/react-query";
+import {getBookings} from '../../services/apiBookings'
 
 function BookingTable() {
-  const bookings = [];
+  // const bookings = [];
+
+  const {data : bookings} = useQuery({
+    queryKey: ['bookings'],
+    queryFn: getBookings
+  })
+  
+
+  if(!bookings?.length) return <Empty resourceName={"bookings"} />
 
   return (
     <Menus>
+      <h1>Booking table</h1>
       <Table columns="0.6fr 2fr 2.4fr 1.4fr 1fr 3.2rem">
         <Table.Header>
           <div>Cabin</div>
